@@ -15,7 +15,8 @@ class ConversionViewController: UIViewController {
     override func viewDidLoad() {
         // UIWindow is the superview of UIView (ViewController)
         super.viewDidLoad()
-        createGradient()
+        print("ConversionViewController loaded.")
+        
 
 //        let firstFrame = CGRect(x: 160, y: 240, width: 100, height: 150)
 //        let firstView = UIView(frame: firstFrame)
@@ -29,6 +30,23 @@ class ConversionViewController: UIViewController {
 //        // UIView for firstView is the superview of green view
 //        firstView.addSubview(secondView)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // adding a layer of gradient color for the background
+        /*
+        createGradient()
+        print("showing gradient in the ConversionViewController")
+        */
+        
+        // changing background to be random color everytime the conversion view controller is loaded
+        /*
+        let bgColors = [UIColor.blue, UIColor.red, UIColor.green, UIColor.yellow]
+        let randomNumber = Int.random(in: 0...3)
+        super.view.backgroundColor = bgColors[randomNumber]
+        */
+ }
     
     
     // Adding a gradient layer
