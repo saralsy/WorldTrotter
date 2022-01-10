@@ -20,6 +20,16 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+    <string>Program requires GPS to track cars and job orders</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Program requires GPS to track cars and job orders</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Program requires GPS to track cars and job orders</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app uses your Microphone to allow Voice over IP communication with the Program Admin system</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

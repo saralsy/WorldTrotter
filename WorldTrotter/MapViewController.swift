@@ -26,10 +26,15 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         view = mapView
         
         // create segmented control programmatically
-        let segmentedControl = UISegmentedControl(items: ["Standard", "Hybrid", "Satellite"])
+//        let segmentedControl = UISegmentedControl(items: ["Standard", "Hybrid", "Satellite"])
+        // internationalize the labels for the segmented control
+        let standardString = NSLocalizedString("Standard", comment: "Standard map view")
+        let hybridString = NSLocalizedString("Hybrid", comment: "Hybrid map view")
+        let satelliteString = NSLocalizedString("Satellite", comment: "Satellite map view")
+        let segmentedControl = UISegmentedControl(items: [standardString, hybridString, satelliteString])
         segmentedControl.backgroundColor = UIColor.systemBackground
         segmentedControl.selectedSegmentIndex = 0
-        
+
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(segmentedControl)
         
@@ -70,7 +75,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         // adding points of interest
         let poiLabel = UILabel()
         poiLabel.translatesAutoresizingMaskIntoConstraints = false
-        poiLabel.text = "Points of Interest"
+        poiLabel.text = NSLocalizedString("Points of Interest", comment: "Points of Interest Label Text")
         view.addSubview(poiLabel)
         let poiLabelTopConstraint = poiLabel.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 8)
         let poiLabelLeadingConstraint = poiLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor)
