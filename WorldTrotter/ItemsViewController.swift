@@ -14,8 +14,36 @@ class ItemsViewController: UITableViewController {
     
     // Return the number of rows for the table.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("\(itemStore.allItems.count) rows are created.")
-        return itemStore.allItems.count
+//        print("\(itemStore.allItems.count) rows are created.")
+        // display "No items!" when there the item count == 0
+        if itemStore.allItems.count == 0 {
+            let emptyLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: self.view.bounds.size.height))
+            emptyLabel.text = "No items!"
+            emptyLabel.textAlignment = NSTextAlignment.center
+            self.tableView.backgroundView = emptyLabel
+//            self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+            return 0
+        } else {
+            switch section {
+            case 0:
+                return itemStore.allItems.count
+            case 1:
+                return itemStore.itemsLessThan50.count
+            case 2:
+                return itemStore.itemsMoreThan50.count
+            default:
+                return 0
+            }
+        }
+        
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+       
+        return 3
+        // 0: non-organized
+        // 1: items worth less than $50
+        // 2: items worth more than or equal to $50
     }
 
     // Provide a cell object for each row.
@@ -23,21 +51,58 @@ class ItemsViewController: UITableViewController {
        // Create an instance of UITableViewCell with default appearance
         // reuseIdentifier is the name of the cell class
 //        let cell = UITableViewCell(style: .value1, reuseIdentifier: "UITableViewCell")
-        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
         
-        // Set the text on teh cell with the description of the item that is
-        // at the nth index of items, where n = row of this cell
-        let item = itemStore.allItems[indexPath.row]
+        // all the packing items
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+             
+             // Set the text on teh cell with the description of the item that is
+             // at the nth index of items, where n = row of this cell
+             let item = itemStore.allItems[indexPath.row]
+             
+             cell.textLabel?.text = item.name
+             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+                
+            return cell
+        } else if indexPath.section == 1 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+             
+             // Set the text on teh cell with the description of the item that is
+             // at the nth index of items, where n = row of this cell
+//            print("indexPath.row \(indexPath.row)")
+            let item = itemStore.itemsLessThan50[indexPath.row]
+             
+             cell.textLabel?.text = item.name
+             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+                
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+             
+             // Set the text on teh cell with the description of the item that is
+             // at the nth index of items, where n = row of this cell
+             let item = itemStore.itemsMoreThan50[indexPath.row]
+             
+             cell.textLabel?.text = item.name
+             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+                
+            return cell
+        }
         
-        cell.textLabel?.text = item.name
-        cell.detailTextLabel?.text = "$\(item.valueInDollars)"
-           
-       return cell
     }
     
     override func tableView(_ tableView: UITableView,
     titleForHeaderInSection section: Int) -> String? {
-        return "Packing List"
+        switch section {
+        case 0:
+            return "Packing List"
+        case 1:
+            return "Items worth less than $50"
+        case 2:
+            return "Items worth more than or equal to $50"
+        default:
+            return "Everything you need"
+        }
     }
     
     // Adding buttons for adding and removing the packing item from the list
@@ -47,10 +112,19 @@ class ItemsViewController: UITableViewController {
         
         // updating the datastore
         let newItem = itemStore.createItem()
-        if let index = itemStore.allItems.firstIndex(where: {$0 == newItem}){
-            let indexPath = IndexPath(row: index, section: 0)
-            // insert this new row into the table
-            tableView.insertRows(at: [indexPath], with: .automatic)
+        
+        if newItem.valueInDollars < 50 {
+            if let index = itemStore.allItems.firstIndex(where: {$0 == newItem}), let lessThan50Idx = itemStore.itemsLessThan50.firstIndex(where: {$0 == newItem}) {
+                let tableIdx = IndexPath(row: index, section: 0)
+                let sectionIdx = IndexPath(row: lessThan50Idx, section: 1)
+                tableView.insertRows(at: [tableIdx, sectionIdx], with: .automatic)
+            }
+        } else {
+            if let index = itemStore.allItems.firstIndex(where: {$0 == newItem}), let moreThan50Idx = itemStore.itemsMoreThan50.firstIndex(where: {$0 == newItem}) {
+                let tableIdx = IndexPath(row: index, section: 0)
+                let sectionIdx = IndexPath(row: moreThan50Idx, section: 2)
+                tableView.insertRows(at: [tableIdx, sectionIdx], with: .automatic)
+            }
         }
     }
     
@@ -68,14 +142,38 @@ class ItemsViewController: UITableViewController {
         }
     }
     
+    // enable editing only for the first section
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool{
+        if indexPath.section == 0 {
+            return true
+        }
+        return false
+    }
+    
     override func tableView(_ tableView: UITableView,
       commit editingStyle: UITableViewCell.EditingStyle,
       forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            let sectionRemovedFrom = indexPath.section
+            print("deleting from section: \(sectionRemovedFrom)")
+            
             let item = itemStore.allItems[indexPath.row]
             print("\(item.name) has been deleted.")
-            itemStore.allItems.remove(at: indexPath.row)
             
+            // remove from specific packing list
+            if let lessThan50Idx = itemStore.itemsLessThan50.firstIndex(where: {$0 == item}) {
+                let lstIdx = IndexPath(row: lessThan50Idx, section: 1)
+                itemStore.itemsLessThan50.remove(at: lessThan50Idx)
+                tableView.deleteRows(at: [lstIdx], with: .automatic)
+                
+            }
+            if let moreThan50Idx = itemStore.itemsMoreThan50.firstIndex(where: {$0 == item}) {
+                let lstIdx = IndexPath(row: moreThan50Idx, section: 2)
+                itemStore.itemsMoreThan50.remove(at: moreThan50Idx)
+                tableView.deleteRows(at: [lstIdx], with: .automatic)
+            }
+            
+            itemStore.allItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }

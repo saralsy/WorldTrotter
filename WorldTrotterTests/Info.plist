@@ -16,6 +16,14 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need User location</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need user location</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 </dict>

@@ -10,6 +10,8 @@ import UIKit
 
 class ItemStore {
     var allItems = [Item]()
+    var itemsLessThan50 = [Item]()
+    var itemsMoreThan50 = [Item]()
     
     // ItemsViewController calls on ItemStore to add new item to the list
     // @discardableResult tells the compiler that the caller can ignore the result of the function
@@ -17,6 +19,12 @@ class ItemStore {
     @discardableResult func createItem() -> Item {
         let newItem = Item(random: true)
         allItems.append(newItem)
+        
+        if newItem.valueInDollars < 50 {
+            itemsLessThan50.append(newItem)
+        } else {
+            itemsMoreThan50.append(newItem)
+        }
         return newItem
     }
     
