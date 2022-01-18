@@ -13,12 +13,18 @@ class Item {
     var valueInDollars: Int
     var serialNumber: String?
     let dateCreated: Date
+    var favorited: Bool
     
     init(name: String, serialNumber: String?, valueInDollars: Int) {
         self.name = name
         self.valueInDollars = valueInDollars
         self.dateCreated = Date()
         self.serialNumber = serialNumber
+        self.favorited = false
+    }
+    
+    func toggleFavorite() {
+        self.favorited = !self.favorited
     }
     
     convenience init(random: Bool = false) {

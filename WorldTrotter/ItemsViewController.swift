@@ -11,11 +11,13 @@ import UIKit
 class ItemsViewController: UITableViewController {
     // adding property 
     var itemStore: ItemStore!
+    var favoritedView: Bool!
     
     // Return the number of rows for the table.
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        print("\(itemStore.allItems.count) rows are created.")
         // display "No items!" when there the item count == 0
+        print("favorited view displayed: \(favoritedView ?? false)")
         if itemStore.allItems.count == 0 {
             let emptyLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: self.view.bounds.size.height))
             emptyLabel.text = "No items!"
@@ -61,6 +63,11 @@ class ItemsViewController: UITableViewController {
              let item = itemStore.allItems[indexPath.row]
              
              cell.textLabel?.text = item.name
+            if item.favorited {
+                // adding the favorited symbol to the item
+                print("adding star to \(item.name)")
+                cell.imageView?.image = UIImage(systemName: "star")
+            }
              cell.detailTextLabel?.text = "$\(item.valueInDollars)"
                 
             return cell
@@ -142,6 +149,11 @@ class ItemsViewController: UITableViewController {
         }
     }
     
+    @IBAction func toggleFavoriteMode(_ sender: UIButton) {
+        // show only the favorited items
+        favoritedView = true
+    }
+    
     // enable editing only for the first section
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool{
         if indexPath.section == 0 {
@@ -149,6 +161,7 @@ class ItemsViewController: UITableViewController {
         }
         return false
     }
+    
     
     override func tableView(_ tableView: UITableView,
       commit editingStyle: UITableViewCell.EditingStyle,
@@ -176,6 +189,46 @@ class ItemsViewController: UITableViewController {
             itemStore.allItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+    }
+    
+    private func handleMarkAsFavorite(_ item: Item, index: Int){
+        itemStore.allItems[index].favorited = true
+        print("Marked \(index)'s item: \(item.name) as favorite")
+        tableView.reloadData()
+    }
+    
+    private func handleMoveToTrash(_ item: Item, index: Int){
+        itemStore.allItems.remove(at: index)
+        print("moving \(item.name) to trash.")
+        if item.valueInDollars < 50, let idx = itemStore.itemsLessThan50.firstIndex(where: {$0 == item}) {
+            itemStore.itemsLessThan50.remove(at: idx)
+        } else if item.valueInDollars >= 50, let idx = itemStore.itemsMoreThan50.firstIndex(where: { $0 == item }) {
+            itemStore.itemsMoreThan50.remove(at: idx)
+        }
+        tableView.reloadData()
+    }
+    
+    
+    override func tableView(_ tableView: UITableView,
+                       trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // adding the swipe left action to favorite an item
+        let action = UIContextualAction(style: .normal,
+                                        title: "Favourite") {
+                                            [weak self] (action, view, completionHandler) in
+                                            self?.handleMarkAsFavorite((self?.itemStore.allItems[indexPath.row])!, index: indexPath.row)
+                                            completionHandler(true)
+        }
+        let trash = UIContextualAction(style: .destructive,
+                                       title: "Trash") { [weak self] (action, view, completionHandler) in
+                                        self?.handleMoveToTrash((self?.itemStore.allItems[indexPath.row])!, index: indexPath.row)
+                                        completionHandler(true)
+        }
+        trash.backgroundColor = .systemRed
+        
+        action.backgroundColor = .systemBlue
+        let configuration = UISwipeActionsConfiguration(actions: [action, trash])
+
+        return configuration
     }
     
     // moving rows
