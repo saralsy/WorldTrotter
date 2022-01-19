@@ -17,7 +17,7 @@ class ItemsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        print("\(itemStore.allItems.count) rows are created.")
         // display "No items!" when there the item count == 0
-        print("favorited view displayed: \(favoritedView ?? false)")
+        title="Packing List"
         if itemStore.allItems.count == 0 {
             let emptyLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.size.width, height: self.view.bounds.size.height))
             emptyLabel.text = "No items!"
@@ -49,49 +49,67 @@ class ItemsViewController: UITableViewController {
     }
 
     // Provide a cell object for each row.
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> ItemCell {
        // Create an instance of UITableViewCell with default appearance
         // reuseIdentifier is the name of the cell class
 //        let cell = UITableViewCell(style: .value1, reuseIdentifier: "UITableViewCell")
         
         // all the packing items
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+            // replacing UITableViewCell with ItemCell for the customized subclass of UITableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
              
              // Set the text on teh cell with the description of the item that is
              // at the nth index of items, where n = row of this cell
              let item = itemStore.allItems[indexPath.row]
              
-             cell.textLabel?.text = item.name
+//             cell.textLabel?.text = item.name
+//             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+            cell.nameLabel.text = item.name
+            cell.serialNumberLabel.text = item.serialNumber
+            cell.valueLabel.text = "$\(item.valueInDollars)"
+            
+            if item.valueInDollars < 50 {
+                cell.backgroundColor = UIColor.green
+            } else {
+                cell.backgroundColor = UIColor.red
+            }
+            
             if item.favorited {
                 // adding the favorited symbol to the item
                 print("adding star to \(item.name)")
                 cell.imageView?.image = UIImage(systemName: "star")
             }
-             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
-                
+
             return cell
         } else if indexPath.section == 1 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
              
              // Set the text on teh cell with the description of the item that is
              // at the nth index of items, where n = row of this cell
 //            print("indexPath.row \(indexPath.row)")
             let item = itemStore.itemsLessThan50[indexPath.row]
              
-             cell.textLabel?.text = item.name
-             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+//             cell.textLabel?.text = item.name
+//             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+            cell.nameLabel.text = item.name
+            cell.serialNumberLabel.text = item.serialNumber
+            cell.valueLabel.text = "$\(item.valueInDollars)"
                 
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath) as! ItemCell
              
              // Set the text on teh cell with the description of the item that is
              // at the nth index of items, where n = row of this cell
              let item = itemStore.itemsMoreThan50[indexPath.row]
              
-             cell.textLabel?.text = item.name
-             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+//             cell.textLabel?.text = item.name
+//             cell.detailTextLabel?.text = "$\(item.valueInDollars)"
+            cell.nameLabel.text = item.name
+            cell.serialNumberLabel.text = item.serialNumber
+            cell.valueLabel.text = "$\(item.valueInDollars)"
                 
             return cell
         }
@@ -254,6 +272,12 @@ class ItemsViewController: UITableViewController {
         
     }
 
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+//        tableView.rowHeight = 65
+        tableView.estimatedRowHeight = 90.0
+        tableView.rowHeight = UITableView.automaticDimension
+        
+    }
     
 }

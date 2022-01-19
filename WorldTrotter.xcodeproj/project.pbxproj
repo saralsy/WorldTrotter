@@ -20,6 +20,7 @@
 		F376C8CB278F4CDF0067696B /* ItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F376C8CA278F4CDF0067696B /* ItemsViewController.swift */; };
 		F376C8CD278F4E040067696B /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = F376C8CC278F4E040067696B /* Item.swift */; };
 		F376C8CF278F50980067696B /* ItemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F376C8CE278F50980067696B /* ItemStore.swift */; };
+		F37A96D727974E26000F9B5E /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37A96D627974E26000F9B5E /* ItemCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		F376C8CA278F4CDF0067696B /* ItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewController.swift; sourceTree = "<group>"; };
 		F376C8CC278F4E040067696B /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		F376C8CE278F50980067696B /* ItemStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemStore.swift; sourceTree = "<group>"; };
+		F37A96D627974E26000F9B5E /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 				F371CE57277E2D4A0067B974 /* SceneDelegate.swift */,
 				F376C8CA278F4CDF0067696B /* ItemsViewController.swift */,
 				F376C8CC278F4E040067696B /* Item.swift */,
+				F37A96D627974E26000F9B5E /* ItemCell.swift */,
 				F376C8CE278F50980067696B /* ItemStore.swift */,
 				F371CE59277E2D4A0067B974 /* ConversionViewController.swift */,
 				F371CE5B277E2D4A0067B974 /* Main.storyboard */,
@@ -282,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F37A96D727974E26000F9B5E /* ItemCell.swift in Sources */,
 				F376C8CB278F4CDF0067696B /* ItemsViewController.swift in Sources */,
 				F371CE5A277E2D4A0067B974 /* ConversionViewController.swift in Sources */,
 				F371CE56277E2D4A0067B974 /* AppDelegate.swift in Sources */,
